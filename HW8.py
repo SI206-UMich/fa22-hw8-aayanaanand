@@ -43,7 +43,36 @@ def barchart_restaurant_categories(db_filename):
     restaurant categories and the values should be the number of restaurants in each category. The function should
     also create a bar chart with restaurant categories and the counts of each category.
     """
-    pass
+
+    path = os.path.dirname(os.path.abspath(__file__))
+    conn = sqlite3.connect(path+'/'+db_filename)
+    cur = conn.cursor()
+    
+    cur.execute("SELECT COUNT(*) as row_count FROM restaurants")
+    row_count = cur.fetchall()[0][0]
+
+    categories = {}
+
+    for x in range(row_count):
+        cur.execute("SELECT category_id FROM restaurants")
+        id = cur.fetchall()[x][0]
+        cur.execute("SELECT category FROM categories WHERE id = ?", (id, ))
+        key = cur.fetchall()[0][0]
+        
+        if key not in categories:
+            categories[key] = 1
+        else:
+            categories[key] += 1
+    
+    
+    plt.barh(range(len(categories)), categories.values(), align='center')
+    plt.yticks(range(len(categories)), categories.keys())
+    plt.xlabel('frequency')
+    plt.ylabel('keywords')
+    plt.show()
+    
+    return categories
+
 
 #EXTRA CREDIT
 def highest_rated_category(db_filename):#Do this through DB as well
@@ -58,6 +87,7 @@ def highest_rated_category(db_filename):#Do this through DB as well
 #Try calling your functions here
 def main():
     get_restaurant_data("South_U_Restaurants.db")
+    barchart_restaurant_categories("South_U_Restaurants.db")
 
 class TestHW8(unittest.TestCase):
     def setUp(self):
