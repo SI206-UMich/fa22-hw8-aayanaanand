@@ -64,7 +64,7 @@ def barchart_restaurant_categories(db_filename):
         else:
             categories[key] += 1
     
-    
+    plt.title("Types of Restaurant on South University Ave")
     plt.barh(range(len(categories)), categories.values(), align='center')
     plt.yticks(range(len(categories)), categories.keys())
     plt.xlabel('frequency')
@@ -74,7 +74,7 @@ def barchart_restaurant_categories(db_filename):
     return categories
 
 
-#EXTRA CREDIT
+#EXTRA CREDIT 
 def highest_rated_category(db_filename):#Do this through DB as well
     """
     This function finds the average restaurant rating for each category and returns a tuple containing the
@@ -82,12 +82,43 @@ def highest_rated_category(db_filename):#Do this through DB as well
     in that category. This function should also create a bar chart that displays the categories along the y-axis
     and their ratings along the x-axis in descending order (by rating).
     """
-    pass
+    path = os.path.dirname(os.path.abspath(__file__))
+    conn = sqlite3.connect(path+'/'+db_filename)
+    cur = conn.cursor()
+
+    cur.execute("SELECT COUNT(*) as row_count FROM categories")
+    row_count = cur.fetchall()[0][0]
+
+    ratings = {}
+    
+    for x in range(row_count):
+        cur.execute("SELECT AVG(rating) FROM restaurants WHERE category_id = ?", (x+1, ))
+        avg = round(cur.fetchall()[0][0], 1)
+        cur.execute("SELECT category FROM categories WHERE id = ?", (x+1, ))
+        category = cur.fetchall()[0][0]
+        ratings[category] = avg
+    
+    sorted_ratings = sorted(ratings.items(), key=lambda item: item[1], reverse=True)
+    sorted_vals = sorted(ratings.values())
+    sorted_keys = []
+    for x in range(len(sorted_ratings)-1, -1, -1):
+        sorted_keys.append(sorted_ratings[x][0])
+
+    plt.title("Average Restaurant Ratings by Category")
+    plt.barh(range(len(sorted_ratings)), sorted_vals, align='center')
+    plt.yticks(range(len(sorted_ratings)), sorted_keys)
+    plt.xlabel('Ratings')
+    plt.ylabel('Categories')
+    plt.show()
+
+    return sorted_ratings[0]
+
 
 #Try calling your functions here
 def main():
     get_restaurant_data("South_U_Restaurants.db")
     barchart_restaurant_categories("South_U_Restaurants.db")
+    highest_rated_category("South_U_Restaurants.db")
 
 class TestHW8(unittest.TestCase):
     def setUp(self):
