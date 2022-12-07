@@ -75,6 +75,7 @@ def barchart_restaurant_categories(db_filename):
     plt.yticks(range(len(categories)), sorted_keys)
     plt.xlabel('Number of Restaurants')
     plt.ylabel('Restaurant Categories')
+    plt.tight_layout()
     plt.show()
     
     return categories
@@ -115,6 +116,7 @@ def highest_rated_category(db_filename):#Do this through DB as well
     plt.yticks(range(len(sorted_ratings)), sorted_keys)
     plt.xlabel('Ratings')
     plt.ylabel('Categories')
+    plt.tight_layout()
     plt.show()
 
     return sorted_ratings[0]
@@ -171,4 +173,4 @@ class TestHW8(unittest.TestCase):
 
 if __name__ == '__main__':
     main()
-    unittest.main(verbosity=2)
+    #unittest.main(verbosity=2)
