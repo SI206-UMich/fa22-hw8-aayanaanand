@@ -64,11 +64,17 @@ def barchart_restaurant_categories(db_filename):
         else:
             categories[key] += 1
     
+    sorted_cats = sorted(categories.items(), key=lambda item: item[1], reverse=True)
+    sorted_vals = sorted(categories.values())
+    sorted_keys = []
+    for x in range(len(sorted_cats)-1, -1, -1):
+        sorted_keys.append(sorted_cats[x][0])
+    
     plt.title("Types of Restaurant on South University Ave")
-    plt.barh(range(len(categories)), categories.values(), align='center')
-    plt.yticks(range(len(categories)), categories.keys())
-    plt.xlabel('frequency')
-    plt.ylabel('keywords')
+    plt.barh(range(len(categories)), sorted_vals, align='center')
+    plt.yticks(range(len(categories)), sorted_keys)
+    plt.xlabel('Number of Restaurants')
+    plt.ylabel('Restaurant Categories')
     plt.show()
     
     return categories
