@@ -73,6 +73,7 @@ def barchart_restaurant_categories(db_filename):
     plt.title("Types of Restaurant on South University Ave")
     plt.barh(range(len(categories)), sorted_vals, align='center')
     plt.yticks(range(len(categories)), sorted_keys)
+    plt.xticks([1, 2, 3, 4])
     plt.xlabel('Number of Restaurants')
     plt.ylabel('Restaurant Categories')
     plt.tight_layout()
